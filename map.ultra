@@ -1,0 +1,53 @@
+---
+type: overpass
+server: https://overpass.maprva.org/api
+style:
+  extends: https://styles.maprva.org/maptiler-basic.json
+  layers:
+    - type: line
+      filter: [ ==, [ get, type ], route ]
+      line-width: 4
+    - type: symbol
+      filter: [ ==, [ geometry-type ], Point ]
+      icon-anchor: bottom
+      icon-overlap: always
+      icon-image:
+        - case
+        - [ ==, [ get, amenity ], toilets ]
+        - pinhead-js:sitting_tank_toilet?shape=map_pin
+        - [ ==, [ get, amenity ], parking ]
+        - pinhead-js:p_wide?shape=map_pin
+        - [ ==, [ get, amenity ], bicycle_repair_station ]
+        - pinhead-js:wrench?shape=map_pin
+        - [ ==, [ get, amenity ], restaurant ]
+        - pinhead-js:fork_crossing_knife?shape=map_pin
+        - [ ==, [ get, shop ], convenience ]
+        - pinhead-js:commercial_building?shape=map_pin
+        - [ ==, [ get, shop ], bicycle ]
+        - pinhead-js:bicycle?shape=map_pin
+        - [ ==, [ get, tourism ], camp_site ]
+        - pinhead-js:campsite?shape=map_pin
+        - [ ==, [ get, tourism ], hotel ]
+        - pinhead-js:person_sleeping_in_bed?shape=map_pin
+        - [ ==, [ get, tourism ], guest_house ]
+        - pinhead-js:person_sleeping_in_bed?shape=map_pin
+        - [ has, historic ]
+        - pinhead-js:classical_building?shape=map_pin
+        - pinhead-js:dot?shape=map_pin
+---
+[out:json];
+relation[wikidata=Q7934165] -> .route;
+.route out geom;
+(
+  nwr[shop=bicycle](around.route:100);
+  nwr[tourism=camp_site][backcountry!=yes](around.route:2000);
+  nwr[tourism=guest_house](around.route:5000);
+  nwr[tourism=hotel](around.route:1000);
+  nwr[amenity=toilets](around.route:100);
+  nwr[amenity=parking][access!=no][access!=private][access!=customers](around.route:100);
+  nwr[amenity=bicycle_repair_station](around.route:50);
+  nwr[amenity=restaurant](around.route:100);
+  nwr[shop=convenience](around.route:100);
+  nwr[historic](around.route:250);
+);
+out center;
