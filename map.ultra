@@ -15,8 +15,10 @@ style:
         - case
         - [ ==, [ get, amenity ], toilets ]
         - pinhead-js:sitting_tank_toilet?shape=map_pin
-        - [ ==, [ get, amenity ], parking ]
+        - [all, [ ==, [ get, amenity ], parking ], [==, [get, access], yes]]
         - pinhead-js:p_wide?shape=map_pin
+        - [ ==, [ get, amenity ], parking ]
+        - pinhead-js:p_wide?shape=map_pin&shapeFill=darkgray
         - [ ==, [ get, amenity ], bicycle_repair_station ]
         - pinhead-js:wrench?shape=map_pin
         - [ ==, [ get, amenity ], restaurant ]
