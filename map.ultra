@@ -35,6 +35,8 @@ style:
         - pinhead-js:person_sleeping_in_bed?shape=map_pin
         - [ has, historic ]
         - pinhead-js:classical_building?shape=map_pin
+        - [ ==, [ get, highway ], milestone ]
+        - pinhead-js:milestone?strokeWidth=1
         - pinhead-js:dot?shape=map_pin
 ---
 [out:json];
@@ -51,5 +53,6 @@ relation[wikidata=Q7934165] -> .route;
   nwr[amenity=restaurant](around.route:100);
   nwr[shop=convenience](around.route:100);
   nwr[historic](around.route:250);
+  nwr[highway=milestone][ref='Virginia Capital Trail'];
 );
 out center;
