@@ -37,12 +37,15 @@ style:
         - pinhead-js:classical_building?shape=map_pin
         - [ ==, [ get, highway ], milestone ]
         - pinhead-js:milestone?strokeWidth=1
+        - [ ==, [ get, amenity ], drinking_water ]
+        - pinhead-js:droplet?shape=map_pin
         - pinhead-js:dot?shape=map_pin
 ---
 [out:json];
 relation[wikidata=Q7934165] -> .route;
 .route out geom;
 (
+  nwr[amenity=drinking_water](around.route:100);
   nwr[shop=bicycle](around.route:100);
   nwr[tourism=camp_site][backcountry!=yes](around.route:2000);
   nwr[tourism=guest_house](around.route:5000);
