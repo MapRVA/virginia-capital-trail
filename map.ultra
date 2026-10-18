@@ -7,11 +7,18 @@ style:
     - type: line
       filter: [ ==, [ get, type ], route ]
       line-width: 4
+      line-color: blue
     - type: symbol
-      filter: [ ==, [ geometry-type ], Point ]
+      filter: [ ==, [ get, highway ], milestone ]
+      icon-image: pinehad-js:milestone
       icon-anchor: bottom
       icon-overlap: always
-      icon-image:
+    - type: symbol
+      minzoom: 15
+      filter: [all, [ ==, [ geometry-type ], Point ], [has, minzoom], ['!', [has, maxzoom]]]
+      icon-anchor: bottom
+      icon-overlap: always
+      icon-image: &icons
         - case
         - [ ==, [ get, amenity ], toilets ]
         - pinhead-js:sitting_tank_toilet?shape=map_pin
@@ -40,6 +47,104 @@ style:
         - [ ==, [ get, amenity ], drinking_water ]
         - pinhead-js:droplet?shape=map_pin
         - pinhead-js:dot?shape=map_pin
+    - type: symbol
+      filter: [all, [ ==, [ geometry-type ], Point ], ['!', [has, minzoom]], ['!', [has, maxzoom]]]
+      icon-anchor: bottom
+      icon-image: *icons
+    - type: symbol
+      maxzoom: 15
+      filter: [ has, maxzoom ]
+      icon-anchor: bottom
+      text-anchor: left
+      text-justify: left
+      text-halo-color: white
+      text-halo-width: 2
+      text-field:
+        - format
+        - [get, name]
+        - {}
+        - [ literal, "\n" ]
+        - {}
+        - - case
+          - ["in", "parking", ["get", "amenities"]]
+          - [image, [literal, pinhead-js:p_wide?shape=square]]
+          - ''
+        - {}
+        - - case
+          - ["in", "parking", ["get", "amenities"]]
+          - ' '
+          - ''
+        - {}
+        - - case
+          - ["in", "toilets", ["get", "amenities"]]
+          - [image, [literal, pinhead-js:sitting_tank_toilet?shape=square]]
+          - ''
+        - {}
+        - - case
+          - ["in", "toilets", ["get", "amenities"]]
+          - ' '
+          - ''
+        - {}
+        - - case
+          - ["in", "restaurant", ["get", "amenities"]]
+          - [image, [literal, pinhead-js:fork_crossing_knife?shape=square]]
+          - ''
+        - {}
+        - - case
+          - ["in", "restaurant", ["get", "amenities"]]
+          - ' '
+          - ''
+        - {}
+        - - case
+          - ["in", "drinking_water", ["get", "amenities"]]
+          - [image, [literal, pinhead-js:droplet?shape=square]]
+          - ''
+        - {}
+        - - case
+          - ["in", "drinking_water", ["get", "amenities"]]
+          - ' '
+          - ''
+        - {}
+        - - case
+          - ["in", "bicycle_repair_station", ["get", "amenities"]]
+          - [image, [literal, pinhead-js:wrench?shape=square]]
+          - ''
+        - {}
+        - - case
+          - ["in", "bicycle_repair_station", ["get", "amenities"]]
+          - ' '
+          - ''
+transform: |
+  import {distance} from "https://esm.sh/@turf/distance";
+  export default (data) => {
+    const clusters = [
+      [({properties}) => properties.wikidata == 'Q3474376', 0.5],
+      [({properties}) => properties.highway == 'trailhead', 0.5],
+      [({properties}) => properties.amenity == 'parking' && properties.name == 'Great Shiplock Park', 0.25],
+      [({properties}) => properties.leisure == 'park' && properties.name == 'Chickahominy Riverfront Park ', 1],
+    ]  
+    
+    const clusterablePoints = data.features.filter(p =>
+      p.geometry.type == 'Point' &&
+      p.properties.highway != 'milestone');
+
+    const clusterFeatures = [];
+    for (const [f, d] of clusters) {
+      for (const clusterPoint of data.features.filter(f)) {
+        clusterPoint.properties.maxzoom = true;
+        clusterPoint.properties.amenities = clusterablePoints
+          .filter(p => distance(p.geometry.coordinates, clusterPoint.geometry.coordinates) < d)
+          .map(p => {
+            p.properties.minzoom = true;
+            return p.properties.amenity || p.properties.tourism
+          });
+        delete clusterPoint.properties.minzoom;
+        clusterFeatures.push(clusterPoint);
+      }
+    }
+    const nonClusters = data.features.filter(({properties}) => properties.highway !== 'trailhead' && !properties.place);
+    return {type: 'FeatureCollection', features: [...nonClusters, ...clusterFeatures]};
+  }
 ---
 [out:json];
 relation[wikidata=Q7934165] -> .route;
@@ -51,11 +156,17 @@ relation[wikidata=Q7934165] -> .route;
   nwr[tourism=guest_house](around.route:5000);
   nwr[tourism=hotel](around.route:1000);
   nwr[amenity=toilets](around.route:100);
-  nwr[amenity=parking][access!=no][access!=private][access!=customers](around.route:100);
+  nwr[amenity=parking][access=yes](around.route:100);
   nwr[amenity=bicycle_repair_station](around.route:50);
   nwr[amenity=restaurant](around.route:100);
   nwr[shop=convenience](around.route:100);
-  nwr[historic](around.route:250);
-  nwr[highway=milestone][ref='Virginia Capital Trail'];
+  nwr[leisure=park][name][wikidata!=Q5148351](around.route:100);
+  node[highway=trailhead](around.route:100);
 );
 out center;
+(
+  node[place][wikidata=Q3474376];
+  node[highway=milestone][ref='Virginia Capital Trail'];
+);
+out;
+
