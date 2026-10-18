@@ -4,24 +4,55 @@ server: https://overpass.maprva.org/api
 style:
   extends: https://styles.maprva.org/maptiler-basic.json
   layers:
-    - type: line
+    - # the trail!
+      type: line
       filter: [ ==, [ get, type ], route ]
       line-width: 4
-      line-color: blue
-    - type: symbol
-      filter: [ ==, [ get, highway ], milestone ]
-      icon-image: pinehad-js:milestone
-      icon-anchor: bottom
+      line-color: '#555'
+    - # milestones
+      &milestones
+      type: symbol
+      filter:
+        - all
+        - [ ==, [ get, highway ], milestone ]
+      icon-image: pinhead-js:milestone?strokeWidth=1
+      icon-anchor: right
       icon-overlap: always
-    - type: symbol
+      text-field: [get, distance]
+      text-anchor: left
+      text-size: 12
+      text-halo-color: white
+      text-halo-width: 2
+    - # milestones - multiples of 10
+      <<: *milestones
+      text-optional: true
+      filter:
+        - all
+        - [ ==, [ get, highway ], milestone ]
+        - [==, [slice, [get, distance], -4], '0 mi']
+    - # Clustered POI - high zoom - individual markers
+      type: symbol
       minzoom: 15
-      filter: [all, [ ==, [ geometry-type ], Point ], [has, minzoom], ['!', [has, maxzoom]]]
+      filter:
+        - all
+        - [ ==, [ geometry-type ], Point ]
+        - [has, minzoom]
+        - ['!', [has, maxzoom]]
+        - [ '!=' , [get, highway], milestone]
       icon-anchor: bottom
       icon-overlap: always
+      text-field: [get, name]
+      text-optional: true
+      text-halo-color: white
+      text-halo-width: 2
+      text-size: 13
+      text-anchor: left
+      text-justify: left
+      text-offset: [1.25, -1.5]
       icon-image: &icons
         - case
         - [ ==, [ get, amenity ], toilets ]
-        - pinhead-js:sitting_tank_toilet?shape=map_pin
+        - pinhead-js:womens_and_mens_separate_restrooms_symbol?shape=map_pin
         - [all, [ ==, [ get, amenity ], parking ], [==, [get, access], yes]]
         - pinhead-js:p_wide?shape=map_pin
         - [ ==, [ get, amenity ], parking ]
@@ -42,15 +73,31 @@ style:
         - pinhead-js:person_sleeping_in_bed?shape=map_pin
         - [ has, historic ]
         - pinhead-js:classical_building?shape=map_pin
-        - [ ==, [ get, highway ], milestone ]
-        - pinhead-js:milestone?strokeWidth=1
         - [ ==, [ get, amenity ], drinking_water ]
-        - pinhead-js:droplet?shape=map_pin
+        - pinhead-js:water_tap_with_drinking_glass?shape=map_pin
+        - [ ==, [ get, leisure ], park ]
+        - pinhead-js:broadleaved_tree?shape=map_pin
+        - [ ==, [ get, leisure ], picnic_table ]
+        - pinhead-js:picnic_table?shape=map_pin
         - pinhead-js:dot?shape=map_pin
-    - type: symbol
-      filter: [all, [ ==, [ geometry-type ], Point ], ['!', [has, minzoom]], ['!', [has, maxzoom]]]
+    - # Non-Clustered POI
+      type: symbol
+      filter:
+        - all
+        - [ ==, [ geometry-type ], Point ]
+        - ['!', [has, minzoom]]
+        - ['!', [has, maxzoom]]
+        - [ '!=' , [get, highway], milestone]
       icon-anchor: bottom
       icon-image: *icons
+      text-field: [get, name]
+      text-halo-color: white
+      text-halo-width: 2
+      text-size: 13
+      text-optional: true
+      text-anchor: left
+      text-justify: left
+      text-offset: [1.25, -1.5]
     - type: symbol
       maxzoom: 15
       filter: [ has, maxzoom ]
@@ -59,11 +106,22 @@ style:
       text-justify: left
       text-halo-color: white
       text-halo-width: 2
+      text-overlap: always
       text-field:
         - format
         - [get, name]
         - {}
         - [ literal, "\n" ]
+        - {}
+        - - case
+          - ["in", "camp_site", ["get", "amenities"]]
+          - [image, [literal, pinhead-js:campsite?shape=square]]
+          - ''
+        - {}
+        - - case
+          - ["in", "camp_site", ["get", "amenities"]]
+          - ' '
+          - ''
         - {}
         - - case
           - ["in", "parking", ["get", "amenities"]]
@@ -77,7 +135,7 @@ style:
         - {}
         - - case
           - ["in", "toilets", ["get", "amenities"]]
-          - [image, [literal, pinhead-js:sitting_tank_toilet?shape=square]]
+          - [image, [literal, pinhead-js:womens_and_mens_separate_restrooms_symbol?shape=square]]
           - ''
         - {}
         - - case
@@ -97,11 +155,21 @@ style:
         - {}
         - - case
           - ["in", "drinking_water", ["get", "amenities"]]
-          - [image, [literal, pinhead-js:droplet?shape=square]]
+          - [image, [literal, pinhead-js:water_tap_with_drinking_glass?shape=square]]
           - ''
         - {}
         - - case
           - ["in", "drinking_water", ["get", "amenities"]]
+          - ' '
+          - ''
+        - {}
+        - - case
+          - ["in", "picnic_table", ["get", "amenities"]]
+          - [image, [literal, pinhead-js:picnic_table?shape=square]]
+          - ''
+        - {}
+        - - case
+          - ["in", "picnic_table", ["get", "amenities"]]
           - ' '
           - ''
         - {}
@@ -118,10 +186,11 @@ transform: |
   import {distance} from "https://esm.sh/@turf/distance";
   export default (data) => {
     const clusters = [
-      [({properties}) => properties.wikidata == 'Q3474376', 0.5],
+      [({properties}) => properties.wikidata == 'Q116302533', 0.5], // lawrence lewis jr park
+      [({properties}) => properties.wikidata == 'Q3474376', 0.5], // charles city
       [({properties}) => properties.highway == 'trailhead', 0.5],
-      [({properties}) => properties.amenity == 'parking' && properties.name == 'Great Shiplock Park', 0.25],
-      [({properties}) => properties.leisure == 'park' && properties.name == 'Chickahominy Riverfront Park ', 1],
+      [({properties}) => properties.wikidata == 'Q49495628', 0.25], //Great Shiplock Park
+      [({properties}) => properties.leisure == 'park' && properties.name == 'Chickahominy Riverfront Park', 1],
     ]  
     
     const clusterablePoints = data.features.filter(p =>
@@ -136,7 +205,7 @@ transform: |
           .filter(p => distance(p.geometry.coordinates, clusterPoint.geometry.coordinates) < d)
           .map(p => {
             p.properties.minzoom = true;
-            return p.properties.amenity || p.properties.tourism
+            return p.properties.amenity || p.properties.tourism || p.properties.leisure
           });
         delete clusterPoint.properties.minzoom;
         clusterFeatures.push(clusterPoint);
@@ -157,6 +226,7 @@ relation[wikidata=Q7934165] -> .route;
   nwr[tourism=hotel](around.route:1000);
   nwr[amenity=toilets](around.route:100);
   nwr[amenity=parking][access=yes](around.route:100);
+  nwr[leisure=picnic_table](around.route:50);
   nwr[amenity=bicycle_repair_station](around.route:50);
   nwr[amenity=restaurant](around.route:100);
   nwr[shop=convenience](around.route:100);
@@ -165,8 +235,16 @@ relation[wikidata=Q7934165] -> .route;
 );
 out center;
 (
-  node[place][wikidata=Q3474376];
+  node[place][wikidata=Q3474376]; // charles city
+  nwr[wikidata=Q116302533][leisure=park]; // lawrence lewis jr park
   node[highway=milestone][ref='Virginia Capital Trail'];
 );
-out;
-
+out center;
+area[wikidata=Q116302533][leisure=park] -> .lljp; // lawrence lewis jr park
+(
+  node[amenity=bicycle_repair_station](area.lljp);
+  nwr[amenity=toilets](area.lljp);
+  nwr[leisure=picnic_table](area.lljp);
+  node[amenity=picnic_table](area.lljp);
+);
+out center;
