@@ -1,0 +1,373 @@
+---
+type: geojson
+fitBounds: true
+server: https://overpass.maprva.org/api
+style:
+  extends: https://styles.maprva.org/maptiler-basic.json
+  layers:
+    - type: line
+      filter:
+        - ==
+        - - get
+          - type
+        - route
+      line-width: 4
+      line-color: "#555"
+    - type: symbol
+      filter:
+        - all
+        - - ==
+          - - get
+            - highway
+          - milestone
+      icon-image: pinhead-js:milestone?strokeWidth=1
+      icon-anchor: right
+      icon-overlap: always
+      text-field:
+        - get
+        - distance
+      text-anchor: left
+      text-size: 12
+      text-halo-color: white
+      text-halo-width: 2
+    - type: symbol
+      filter:
+        - all
+        - - ==
+          - - get
+            - highway
+          - milestone
+        - - ==
+          - - slice
+            - - get
+              - distance
+            - -4
+          - 0 mi
+      icon-image: pinhead-js:milestone?strokeWidth=1
+      icon-anchor: right
+      icon-overlap: always
+      text-field:
+        - get
+        - distance
+      text-anchor: left
+      text-size: 12
+      text-halo-color: white
+      text-halo-width: 2
+      text-optional: true
+    - type: symbol
+      minzoom: 15
+      filter:
+        - all
+        - - ==
+          - - geometry-type
+          - Point
+        - - has
+          - minzoom
+        - - "!"
+          - - has
+            - maxzoom
+        - - "!="
+          - - get
+            - highway
+          - milestone
+      icon-anchor: bottom
+      icon-overlap: always
+      text-field:
+        - get
+        - name
+      text-optional: true
+      text-halo-color: white
+      text-halo-width: 2
+      text-size: 13
+      text-anchor: left
+      text-justify: left
+      text-offset:
+        - 1.25
+        - -1.5
+      icon-image: &a1
+        - case
+        - - ==
+          - - get
+            - amenity
+          - toilets
+        - pinhead-js:womens_and_mens_separate_restrooms_symbol?shape=map_pin
+        - - all
+          - - ==
+            - - get
+              - amenity
+            - parking
+          - - ==
+            - - get
+              - access
+            - yes
+        - pinhead-js:p_wide?shape=map_pin
+        - - ==
+          - - get
+            - amenity
+          - parking
+        - pinhead-js:p_wide?shape=map_pin&shapeFill=darkgray
+        - - ==
+          - - get
+            - amenity
+          - bicycle_repair_station
+        - pinhead-js:wrench?shape=map_pin
+        - - ==
+          - - get
+            - amenity
+          - restaurant
+        - pinhead-js:fork_crossing_knife?shape=map_pin
+        - - ==
+          - - get
+            - shop
+          - convenience
+        - pinhead-js:commercial_building?shape=map_pin
+        - - ==
+          - - get
+            - shop
+          - bicycle
+        - pinhead-js:bicycle?shape=map_pin
+        - - ==
+          - - get
+            - tourism
+          - camp_site
+        - pinhead-js:campsite?shape=map_pin
+        - - ==
+          - - get
+            - tourism
+          - hotel
+        - pinhead-js:person_sleeping_in_bed?shape=map_pin
+        - - ==
+          - - get
+            - tourism
+          - guest_house
+        - pinhead-js:person_sleeping_in_bed?shape=map_pin
+        - - has
+          - historic
+        - pinhead-js:classical_building?shape=map_pin
+        - - ==
+          - - get
+            - amenity
+          - drinking_water
+        - pinhead-js:water_tap_with_drinking_glass?shape=map_pin
+        - - ==
+          - - get
+            - leisure
+          - park
+        - pinhead-js:broadleaved_tree?shape=map_pin
+        - - ==
+          - - get
+            - leisure
+          - picnic_table
+        - pinhead-js:picnic_table?shape=map_pin
+        - pinhead-js:dot?shape=map_pin
+    - type: symbol
+      filter:
+        - all
+        - - ==
+          - - geometry-type
+          - Point
+        - - "!"
+          - - has
+            - minzoom
+        - - "!"
+          - - has
+            - maxzoom
+        - - "!="
+          - - get
+            - highway
+          - milestone
+      icon-anchor: bottom
+      icon-image: *a1
+      text-field:
+        - get
+        - name
+      text-halo-color: white
+      text-halo-width: 2
+      text-size: 13
+      text-optional: true
+      text-anchor: left
+      text-justify: left
+      text-offset:
+        - 1.25
+        - -1.5
+    - type: symbol
+      maxzoom: 15
+      filter:
+        - has
+        - maxzoom
+      icon-anchor: bottom
+      text-anchor: left
+      text-justify: left
+      text-halo-color: white
+      text-halo-width: 2
+      text-overlap: always
+      text-field:
+        - format
+        - - get
+          - name
+        - {}
+        - - literal
+          - |+
+            
+        - {}
+        - - case
+          - - in
+            - camp_site
+            - - get
+              - amenities
+          - - image
+            - - literal
+              - pinhead-js:campsite?shape=square
+          - ""
+        - {}
+        - - case
+          - - in
+            - camp_site
+            - - get
+              - amenities
+          - " "
+          - ""
+        - {}
+        - - case
+          - - in
+            - parking
+            - - get
+              - amenities
+          - - image
+            - - literal
+              - pinhead-js:p_wide?shape=square
+          - ""
+        - {}
+        - - case
+          - - in
+            - parking
+            - - get
+              - amenities
+          - " "
+          - ""
+        - {}
+        - - case
+          - - in
+            - toilets
+            - - get
+              - amenities
+          - - image
+            - - literal
+              - pinhead-js:womens_and_mens_separate_restrooms_symbol?shape=square
+          - ""
+        - {}
+        - - case
+          - - in
+            - toilets
+            - - get
+              - amenities
+          - " "
+          - ""
+        - {}
+        - - case
+          - - in
+            - restaurant
+            - - get
+              - amenities
+          - - image
+            - - literal
+              - pinhead-js:fork_crossing_knife?shape=square
+          - ""
+        - {}
+        - - case
+          - - in
+            - restaurant
+            - - get
+              - amenities
+          - " "
+          - ""
+        - {}
+        - - case
+          - - in
+            - drinking_water
+            - - get
+              - amenities
+          - - image
+            - - literal
+              - pinhead-js:water_tap_with_drinking_glass?shape=square
+          - ""
+        - {}
+        - - case
+          - - in
+            - drinking_water
+            - - get
+              - amenities
+          - " "
+          - ""
+        - {}
+        - - case
+          - - in
+            - picnic_table
+            - - get
+              - amenities
+          - - image
+            - - literal
+              - pinhead-js:picnic_table?shape=square
+          - ""
+        - {}
+        - - case
+          - - in
+            - picnic_table
+            - - get
+              - amenities
+          - " "
+          - ""
+        - {}
+        - - case
+          - - in
+            - bicycle_repair_station
+            - - get
+              - amenities
+          - - image
+            - - literal
+              - pinhead-js:wrench?shape=square
+          - ""
+        - {}
+        - - case
+          - - in
+            - bicycle_repair_station
+            - - get
+              - amenities
+          - " "
+          - ""
+transform: >
+  import {distance} from "https://esm.sh/@turf/distance";
+
+  export default (data) => {
+    const clusters = [
+      [({properties}) => properties.wikidata == 'Q116302533', 0.5], // lawrence lewis jr park
+      [({properties}) => properties.wikidata == 'Q3474376', 0.5], // charles city
+      [({properties}) => properties.highway == 'trailhead', 0.5],
+      [({properties}) => properties.wikidata == 'Q49495628', 0.25], //Great Shiplock Park
+      [({properties}) => properties.leisure == 'park' && properties.name == 'Chickahominy Riverfront Park', 1],
+    ]  
+    
+    const clusterablePoints = data.features.filter(p =>
+      p.geometry.type == 'Point' &&
+      p.properties.highway != 'milestone');
+
+    const clusterFeatures = [];
+    for (const [f, d] of clusters) {
+      for (const clusterPoint of data.features.filter(f)) {
+        clusterPoint.properties.maxzoom = true;
+        clusterPoint.properties.amenities = clusterablePoints
+          .filter(p => distance(p.geometry.coordinates, clusterPoint.geometry.coordinates) < d)
+          .map(p => {
+            p.properties.minzoom = true;
+            return p.properties.amenity || p.properties.tourism || p.properties.leisure
+          });
+        delete clusterPoint.properties.minzoom;
+        clusterFeatures.push(clusterPoint);
+      }
+    }
+    const nonClusters = data.features.filter(({properties}) => properties.highway !== 'trailhead' && !properties.place);
+    return {type: 'FeatureCollection', features: [...nonClusters, ...clusterFeatures]};
+  }
+
+---
+https://raw.githubusercontent.com/MapRVA/virginia-capital-trail/trunk/data.geojson

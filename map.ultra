@@ -1,5 +1,6 @@
 ---
 type: overpass
+fitBounds: true
 server: https://overpass.maprva.org/api
 style:
   extends: https://styles.maprva.org/maptiler-basic.json
