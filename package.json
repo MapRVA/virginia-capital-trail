@@ -1,0 +1,22 @@
+{
+  "name": "@maprva/vct-map",
+  "version": "1.0.0",
+  "description": "A map of the Virginia Capital Trail",
+  "repository": {
+    "type": "git",
+    "url": "gh:maprva/virginia-capital-trail"
+  },
+  "license": "MIT",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "osm2geojson-ultra": "^4.0.1"
+  },
+  "dependencies": {
+    "@turf/distance": "^7.4.0"
+  }
+}
