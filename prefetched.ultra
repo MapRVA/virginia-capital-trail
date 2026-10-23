@@ -1,6 +1,12 @@
 ---
 type: geojson
 fitBounds: true
+controls:
+  - type: GeolocateControl
+    options:
+      positionOptions:
+        enableHighAccuracy: true
+      trackUserLocation: true
 server: https://overpass.maprva.org/api
 style:
   extends: https://styles.maprva.org/maptiler-basic.json
