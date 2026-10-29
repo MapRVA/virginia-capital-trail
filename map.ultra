@@ -1,6 +1,7 @@
 ---
 type: overpass
-server: https://overpass.maprva.org/api
+#server: https://overpass.maprva.org/api
+server: https://overpass-staging.maprva.org/api
 style:
   extends: https://styles.maprva.org/maptiler-basic.json
   sprite: https://maprva.github.io/virginia-capital-trail/sprites
