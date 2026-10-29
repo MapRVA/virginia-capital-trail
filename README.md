@@ -23,8 +23,8 @@ https://maprva.github.io/virginia-capital-trail/style.json
 
 ### Development
 It uses the experimental `ultra run` CLI to build a `style.json` and uses
-[Pinhead-JS](https://gitlab.com/trailstash/pinhead-js) and a
-[fork of sprite-one](https://github.com/dschep/sprite-one) to build the sprites.
+[Pinhead-JS](https://gitlab.com/trailstash/pinhead-js) and
+[sprite-one](https://github.com/unvt/sprite-one) to build the sprites.
 
 It uses Ultra's [`transform:`](https://overpass-ultra.us/docs/yaml/#transform) and
 [TurfJS's `distance` function](https://turfjs.org/docs/api/distance) to create clusters
