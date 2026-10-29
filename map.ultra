@@ -65,6 +65,8 @@ style:
         - brewery
         - [ ==, [ get, amenity ], fast_food ]
         - restaurant
+        - [ ==, [ get, amenity ], library ]
+        - library
         - [ ==, [ get, amenity ], restaurant ]
         - restaurant
         - [ ==, [ get, shop ], convenience ]
