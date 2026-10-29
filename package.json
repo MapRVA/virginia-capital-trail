@@ -12,8 +12,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm run build:sprites && npm run build:style",
-    "build:style": "ultra run map.ultra -o dist/style.json",
+    "build": "npm run build:sprites && npm run build:style && npm run build:index",
+    "build:index": "mkdir -p dist && cp index.html dist/.",
+    "build:style": "mkdir -p dist && ultra run map.ultra -o dist/style.json",
     "build:sprites": "pinhead build-icons --outdir build/sprites && mkdir -p dist && sprite-one dist/sprites -i build/sprites -r 1 2"
   },
   "devDependencies": {

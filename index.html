@@ -1,0 +1,29 @@
+<style>
+html, body, #map {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+}
+</style>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@^6.16.0/dist/maplibre-gl.css" />
+<div id="map"></div>
+<script type="module">
+    import * as maplibregl from 'https://unpkg.com/maplibre-gl@^6.16.0/dist/maplibre-gl.mjs';
+
+    const map = new maplibregl.Map({
+        container: 'map', 
+        style: 'https://maprva.github.io/virginia-capital-trail/style.json',
+        bounds: [-77.4797058105469,37.184116915981754,-76.73229217529298,37.55492071859409],
+        attributionControl: {compact: true},
+    });
+
+    map.addControl(new maplibregl.NavigationControl());
+    map.addControl(
+        new maplibregl.GeolocateControl({
+            positionOptions: {
+                enableHighAccuracy: true,
+            },
+            trackUserLocation: true,
+        })
+    );
+</script>
