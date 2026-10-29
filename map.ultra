@@ -71,6 +71,8 @@ style:
         - convenience_store
         - [ ==, [ get, shop ], bicycle ]
         - bike_shop
+        - [ ==, [ get, shop ], supermarket ]
+        - grocery_store
         - [ ==, [ get, tourism ], camp_site ]
         - campground
         - [ ==, [ get, tourism ], hotel ]
@@ -256,6 +258,7 @@ relation[wikidata=Q7934165] -> .route;
   nwr[tourism=picnic_site](around.route:500);
   nwr[amenity=bicycle_repair_station](around.route:50);
   nwr[amenity=restaurant](around.route:200);
+  nwr[shop=supermarket](around.route:500);
   nwr[amenity=fast_food](around.route:200);
   nwr[shop=convenience](around.route:100);
   nwr[leisure=park][name][wikidata!=Q5148351](around.route:100);
