@@ -59,6 +59,10 @@ style:
         - parking
         - [ ==, [ get, amenity ], bicycle_repair_station ]
         - bicycle_repair_station
+        - [ ==, [ get, craft ], winery ]
+        - winery
+        - [ ==, [ get, craft ], brewery ]
+        - brewery
         - [ ==, [ get, amenity ], restaurant ]
         - restaurant
         - [ ==, [ get, shop ], convenience ]
@@ -240,6 +244,8 @@ relation[wikidata=Q7934165] -> .route;
   nwr[shop=convenience](around.route:100);
   nwr[leisure=park][name][wikidata!=Q5148351](around.route:100);
   node[highway=trailhead](around.route:100);
+  nwr[craft=brewery](around.route:1000);
+  nwr[craft=winery](around.route:5000);
 );
 out center;
 

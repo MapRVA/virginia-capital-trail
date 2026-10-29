@@ -21,7 +21,9 @@
         "classical_building": "historic",
         "commercial_building": "convenience_store",
         "broadleaved_tree": "park",
-        "person_sleeping_in_bed": "lodging"
+        "person_sleeping_in_bed": "lodging",
+        "wine_bottle_and_wine_glass": "winery",
+        "beer_mug_with_foam": "brewery"
       },
       "options": {
         "shape": "map_pin"
