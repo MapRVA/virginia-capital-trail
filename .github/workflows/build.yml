@@ -29,7 +29,7 @@ jobs:
       - name: Install Node.js deps
         run: npm ci
       - name: Build Sprites
-        run: npm build:sprites
+        run: npm run build:sprites
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
