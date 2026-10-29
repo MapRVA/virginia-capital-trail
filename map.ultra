@@ -12,7 +12,6 @@ style:
       line-width: 4
       line-color: '#555'
     - # milestones
-      &milestones
       type: symbol
       filter:
         - all
@@ -25,13 +24,6 @@ style:
       text-size: 12
       text-halo-color: white
       text-halo-width: 2
-    - # milestones - multiples of 10
-      <<: *milestones
-      text-optional: true
-      filter:
-        - all
-        - [ ==, [ get, highway ], milestone ]
-        - [==, [slice, [get, distance], -4], '0 mi']
     - # Clustered POI - high zoom - individual markers
       type: symbol
       minzoom: 15
