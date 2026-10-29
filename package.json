@@ -20,7 +20,7 @@
   "devDependencies": {
     "@trailstash/pinhead-js": "^1.0.0",
     "@unvt/sprite-one": "github:dschep/sprite-one",
-    "@trailstash/ultra": "^7.1.0-9-g84ab16c",
+    "@trailstash/ultra": "^7.1.1-14-gce0d5d1",
     "@turf/distance": "^7.4.0"
   }
 }
