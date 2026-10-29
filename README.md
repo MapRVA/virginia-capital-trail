@@ -10,7 +10,10 @@ Preview the map here: https://maprva.github.io/virginia-capital-trail/
 ### Use the map!
 
 #### Embed
+You can embed the preview page directly onto your site too:
+```
 <iframe src="https://maprva.github.io/virginia-capital-trail/"/>
+```
 
 #### MapLibre
 To use the map with [MapLibre](https://maplibre.org) use this as your style URL:
