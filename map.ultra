@@ -63,6 +63,8 @@ style:
         - winery
         - [ ==, [ get, craft ], brewery ]
         - brewery
+        - [ ==, [ get, amenity ], fast_food ]
+        - restaurant
         - [ ==, [ get, amenity ], restaurant ]
         - restaurant
         - [ ==, [ get, shop ], convenience ]
@@ -82,6 +84,8 @@ style:
         - [ ==, [ get, leisure ], park ]
         - park
         - [ ==, [ get, leisure ], picnic_table ]
+        - picnic_table
+        - [ ==, [ get, tourism ], picnic_site ]
         - picnic_table
         - pinhead-js:dot?shape=map_pin
     - # Non-Clustered POI
@@ -152,12 +156,22 @@ style:
           - ''
         - {}
         - - case
-          - ["in", "restaurant", ["get", "amenities"]]
+          - [any, ["in", "restaurant", ["get", "amenities"]], ["in", "fast_food", ["get", "amenities"]]]
           - [image, [literal, restaurant-square]]
           - ''
         - {}
         - - case
-          - ["in", "restaurant", ["get", "amenities"]]
+          - [any, ["in", "restaurant", ["get", "amenities"]], ["in", "fast_food", ["get", "amenities"]]]
+          - ' '
+          - ''
+        - {}
+        - - case
+          - ["in", "guest_house", ["get", "amenities"]]
+          - [image, [literal, lodging-square]]
+          - ''
+        - {}
+        - - case
+          - ["in", "guest_house", ["get", "amenities"]]
           - ' '
           - ''
         - {}
@@ -239,8 +253,10 @@ relation[wikidata=Q7934165] -> .route;
   nwr[amenity=toilets](around.route:100);
   nwr[amenity=parking][access=yes](around.route:100);
   nwr[leisure=picnic_table](around.route:50);
+  nwr[tourism=picnic_site](around.route:500);
   nwr[amenity=bicycle_repair_station](around.route:50);
-  nwr[amenity=restaurant](around.route:100);
+  nwr[amenity=restaurant](around.route:200);
+  nwr[amenity=fast_food](around.route:200);
   nwr[shop=convenience](around.route:100);
   nwr[leisure=park][name][wikidata!=Q5148351](around.route:100);
   node[highway=trailhead](around.route:100);

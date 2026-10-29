@@ -37,7 +37,8 @@
         "p_wide": "parking-square",
         "water_tap_with_drinking_glass": "water-square",
         "picnic_table": "picnic_table-square",
-        "wrench": "bicycle_repair_station-square"
+        "wrench": "bicycle_repair_station-square",
+        "person_sleeping_in_bed": "lodging-square",
       },
       "options": {
         "shape": "square"
