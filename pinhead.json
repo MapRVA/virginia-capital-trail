@@ -1,0 +1,45 @@
+{
+  "groups": [
+    {
+      "icons": {
+        "milestone": "milestone"
+      },
+      "options": {
+        "strokeWidth": 1
+      }
+    },
+    {
+      "icons": {
+        "bicycle": "bike_shop",
+        "womens_and_mens_separate_restrooms_symbol": "toilets",
+        "campsite": "campground",
+        "fork_crossing_knife": "restaurant",
+        "p_wide": "parking",
+        "water_tap_with_drinking_glass": "water",
+        "picnic_table": "picnic_table",
+        "wrench": "bicycle_repair_station",
+        "classical_building": "historic",
+        "commercial_building": "convenience_store",
+        "broadleaved_tree": "park",
+        "person_sleeping_in_bed": "lodging"
+      },
+      "options": {
+        "shape": "map_pin"
+      }
+    },
+    {
+      "icons": {
+        "womens_and_mens_separate_restrooms_symbol": "toilets-square",
+        "campsite": "campground-square",
+        "fork_crossing_knife": "restaurant-square",
+        "p_wide": "parking-square",
+        "water_tap_with_drinking_glass": "water-square",
+        "picnic_table": "picnic_table-square",
+        "wrench": "bicycle_repair_station-square"
+      },
+      "options": {
+        "shape": "square"
+      }
+    }
+  ]
+}
