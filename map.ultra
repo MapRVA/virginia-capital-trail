@@ -265,6 +265,7 @@ relation[wikidata=Q7934165] -> .route;
   node[highway=trailhead](around.route:100);
   nwr[craft=brewery](around.route:1000);
   nwr[craft=winery](around.route:5000);
+  nwr[amenity=library](around.route:500);
 );
 out center;
 
